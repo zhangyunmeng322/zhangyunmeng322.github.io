@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青春逐梦·校园纪行</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+            scroll-behavior: smooth;
+        }
+        :root {
+            --main-blue: #87CEEB;
+            --main-pink: #FFC0CB;
+            --main-white: #FFFDFB;
+            --sub-orange: #FFD700;
+            --text-gray: #666;
+        }
+        body {
+            background-color: var(--main-white);
+            color: #333;
+            line-height: 1.6;
+        }
+        /* 导航栏 */
+        .nav {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            transition: 0.3s;
+        }
+        .nav-scroll {
+            background-color: #fff;
+            padding: 12px 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--main-blue);
+        }
+        .nav-list {
+            display: flex;
+            list-style: none;
+            transition: 0.3s;
+        }
+        .nav-list li {
+            margin-left: 30px;
+        }
+        .nav-list a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .nav-list a:hover {
+            color: var(--main-pink);
+        }
+        .menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        /* 移动端菜单展开 */
+        .nav-list.active {
+            display: flex !important;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+        .nav-list.active li {
+            margin: 10px 0;
+        }
+        /* banner */
+        .banner {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(rgba(135,206,235,0.2), rgba(255,192,203,0.2)), url("https://gips0.baidu.com/it/u=3561770696,335884761&fm=3074&app=3074&f=JPEG?w=1280&h=930&type=normal&func=");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #333;
+            padding: 0 20px;
+        }
+        .banner h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease;
+        }
+        .banner p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            animation: fadeIn 2s ease;
+        }
+        .banner-btn {
+            padding: 12px 30px;
+            background-color: var(--main-blue);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            animation: fadeIn 2.5s ease;
+        }
+        .banner-btn:hover {
+            background-color: var(--main-pink);
+            transform: translateY(-3px);
+        }
+        .banner-btn:active {
+            transform: scale(0.96);
+        }
+        /* 通用样式 */
+        .section {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 0.8s ease;
+        }
+        .section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 50px;
+            color: #333;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            width: 60px;
+            height: 3px;
+            background-color: var(--main-pink);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        /* 校园风光 */
+        .campus-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .campus-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .campus-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .campus-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: 0.4s;
+        }
+        .campus-card:hover img {
+            transform: scale(1.08);
+        }
+        .card-text {
+            padding: 20px;
+        }
+        .card-text h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .card-text p {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+        /* 青春语录 */
+        .quote-box {
+            text-align: center;
+            padding: 40px;
+            background-color: rgba(255,192,203,0.1);
+            border-radius: 20px;
+        }
+        .quote-text {
+            font-size: 20px;
+            color: #555;
+            margin-bottom: 20px;
+            font-style: italic;
+            transition: 0.4s;
+        }
+        .refresh-btn {
+            padding: 8px 20px;
+            background: var(--main-blue);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+        .refresh-btn:hover {
+            background: var(--main-pink);
+        }
+        /* 逐梦成长 */
+        .dream-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+        }
+        .dream-item {
+            flex: 1;
+            min-width: 300px;
+        }
+        .dream-item h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--main-blue);
+        }
+        .dream-item p {
+            font-size: 16px;
+            color: var(--text-gray);
+            line-height: 1.8;
+        }
+        /* 校园日常 */
+        .daily-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .daily-item {
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border-top: 3px solid var(--main-blue);
+            transition: 0.3s;
+        }
+        .daily-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .daily-item h4 {
+            font-size: 19px;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        .daily-item p {
+            font-size: 15px;
+            color: var(--text-gray);
+            line-height: 1.7;
+        }
+        /* 留言区 */
+        .message-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .message-card {
+            padding: 25px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--main-blue);
+            transition: 0.3s;
+        }
+        .message-card:hover {
+            border-left-color: var(--main-pink);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        }
+        .message-card p {
+            font-size: 15px;
+            color: #444;
+        }
+        /* 留言输入框 */
+        .message-input {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            gap: 15px;
+            padding: 10px;
+        }
+        .message-input textarea {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            resize: none;
+            height: 100px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .message-input textarea:focus {
+            border-color: var(--main-blue);
+        }
+        .send-btn {
+            padding: 0 25px;
+            background: var(--main-blue);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .send-btn:hover {
+            background: var(--main-pink);
+        }
+        /* 页脚 */
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--text-gray);
+            margin-top: 50px;
+        }
+        /* 回到顶部按钮 */
+        .back-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 45px;
+            height: 45px;
+            background: var(--main-blue);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            z-index: 99;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .back-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .back-top:hover {
+            background: var(--main-pink);
+            transform: translateY(-5px);
+        }
+        /* 动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav-list {
+                display: none;
+            }
+            .menu-btn {
+                display: block;
+            }
+            .banner h1 {
+                font-size: 32px;
+            }
+            .banner p {
+                font-size: 16px;
+            }
+            .section-title {
+                font-size: 26px;
+            }
+            .message-input {
+                flex-direction: column;
+            }
+            .send-btn {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div class="nav">
+        <div class="nav-container">
+            <div class="logo">青春逐梦</div>
+            <ul class="nav-list">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#campus">校园风光</a></li>
+                <li><a href="#daily">校园日常</a></li>
+                <li><a href="#quote">青春印记</a></li>
+                <li><a href="#dream">逐梦之路</a></li>
+                <li><a href="#message">寄语留言</a></li>
+            </ul>
+            <div class="menu-btn">☰</div>
+        </div>
+    </div>
+
+    <!-- 首屏 -->
+    <div class="banner" id="home">
+        <h1>青春逐梦·校园纪行</h1>
+        <p>以青春之名，赴时代之约；以韶华之力，筑梦想之基</p>
+        <p style="font-size: 17px;max-width: 800px;">校园是梦想启航的港湾，是青春绽放的舞台，每一寸土地都藏着成长的故事，每一段时光都镌刻着少年的热血与温柔</p>
+        <button class="banner-btn">开启校园之旅</button>
+    </div>
+
+    <!-- 校园风光 -->
+    <section class="section" id="campus">
+        <h2 class="section-title">校园风光</h2>
+        <p style="text-align:center;color:var(--text-gray);margin-bottom:40px;max-width:900px;margin-left:auto;margin-right:auto;">四季流转，风光更迭，校园的每一处景致都有着独属于自己的韵味，或是清晨的薄雾，或是午后的暖阳，或是傍晚的余晖，都构成了青春里最动人的画卷</p>
+        <div class="campus-box">
+            <div class="campus-card">
+                <img src="https://img2.baidu.com/it/u=3366220619,155306307&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500" alt="校园教学楼">
+                <div class="card-text">
+                    <h3>书香楼宇</h3>
+                    <p>窗明几净的教学楼，承载着无数少年的求学梦，朗朗书声回荡在楼宇之间。晨光洒进教室，粉笔书写着知识，这里是我们奔赴理想的第一站，每一间教室都藏着不懈的坚持与向上的力量。</p>
+                </div>
+            </div>
+            <div class="campus-card">
+                <img src="https://img1.baidu.com/it/u=764449031,549900382&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1666" alt="校园林荫道">
+                <div class="card-text">
+                    <h3>林荫小径</h3>
+                    <p>午后阳光透过枝叶洒落，漫步在林荫小道，感受校园独有的静谧与美好。课余时分，与同窗并肩而行，谈天说地，细碎的美好缓缓流淌，成为青春里难以忘怀的温柔瞬间。</p>
+                </div>
+            </div>
+            <div class="campus-card">
+                <img src="https://pic1.zhimg.com/v2-16011952182ffadac46de46ea750c7ac_r.jpg?source=1def8aca" alt="校园操场">
+                <div class="card-text">
+                    <h3>热血操场</h3>
+                    <p>奔跑、跳跃、呐喊，这里挥洒着青春的汗水，见证着少年们的蓬勃朝气。运动会上的奋力冲刺，课间的嬉笑打闹，操场不仅是运动的场地，更是我们释放活力、绽放自我的青春主场。</p>
+                </div>
+            </div>
+            <div class="campus-card">
+                <img src="https://bkimg.cdn.bcebos.com/pic/bd3eb13533fa828ba61eb16883465634970a314eecbd" alt="校园图书馆">
+                <div class="card-text">
+                    <h3>墨香书馆</h3>
+                    <p>安静肃穆的图书馆，满是墨香与书卷气，一排排书架承载着知识的力量。在这里沉下心阅读、伏案学习，与先贤对话、与知识同行，为梦想积蓄力量，沉淀更好的自己。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 校园日常 -->
+    <section class="section" id="daily">
+        <h2 class="section-title">校园日常</h2>
+        <p style="text-align:center;color:var(--text-gray);margin-bottom:40px;max-width:900px;margin-left:auto;margin-right:auto;">平凡的校园日常，拼凑出滚烫的青春，课堂、课间、三餐、相伴，每一件小事都值得珍藏，每一段日常都满是温暖</p>
+        <div class="daily-box">
+            <div class="daily-item">
+                <h4>课堂研学</h4>
+                <p>三尺讲台存日月，一支粉笔写春秋。课堂上认真聆听老师的讲解，积极思考、踊跃发言，记录重点、梳理知识，在一次次思维碰撞中提升自我，弄懂每一个难题，收获成长与进步。</p>
+            </div>
+            <div class="daily-item">
+                <h4>社团风采</h4>
+                <p>加入心仪的社团，结识志同道合的伙伴，在各类活动中施展才华、锻炼能力。文艺汇演、学科竞赛、志愿活动、兴趣交流，校园生活因此变得丰富多彩，也让我们学会协作、勇于突破。</p>
+            </div>
+            <div class="daily-item">
+                <h4>同窗相伴</h4>
+                <p>求学路上，有幸与同窗相伴，一起刷题、一起奋斗、一起欢笑、一起成长。难过时彼此安慰，迷茫时互相鼓励，成功时共同庆贺，这份纯粹真挚的情谊，是校园时光最珍贵的礼物。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 青春印记 -->
+    <section class="section" id="quote">
+        <h2 class="section-title">青春印记</h2>
+        <div class="quote-box">
+            <p class="quote-text" id="quoteShow">少年自有玫瑰与星光，不负韶华，不畏远方，在校园里奔赴属于自己的万丈光芒。</p>
+            <button class="refresh-btn" id="refreshQuote">刷新语录</button>
+        </div>
+    </section>
+
+    <!-- 逐梦之路 -->
+    <section class="section" id="dream">
+        <h2 class="section-title">逐梦成长</h2>
+        <p style="text-align:center;color:var(--text-gray);margin-bottom:40px;max-width:900px;margin-left:auto;margin-right:auto;">青春本就是一场逐梦的旅程，校园便是这段旅程的起点，我们在这里学习、蜕变、前行，一步步朝着心中的目标迈进，终会长成自己期待的模样</p>
+        <div class="dream-box">
+            <div class="dream-item">
+                <h3>勤学笃行</h3>
+                <p>课堂上专注聆听，书桌前奋笔疾书，在知识的海洋里不断探索，用汗水浇灌梦想，用努力书写成长，每一次挑灯夜读，都是为了靠近心中的目标。遇到难题不退缩，面对挫折不放弃，把每一份坚持都化作前行的动力，脚踏实地，稳步前行，终会拨开迷雾，看见属于自己的曙光。</p>
+            </div>
+            <div class="dream-item">
+                <h3>向阳生长</h3>
+                <p>校园生活不只有书本知识，更有社团活动、同窗情谊、师长教诲，在温暖的校园氛围里，我们学会坚持、学会合作、学会成长，始终保持热爱，奔赴下一场山海。带着善意与勇气，接纳不完美，突破自我局限，始终心怀阳光，在青春的赛道上奋力奔跑，活成自己喜欢的模样。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 寄语留言 -->
+    <section class="section" id="message">
+        <h2 class="section-title">青春寄语</h2>
+        <p style="text-align:center;color:var(--text-gray);margin-bottom:40px;max-width:900px;margin-left:auto;margin-right:auto;">一纸寄语，一份期许，写给校园，写给青春，也写给正在逐梦路上的自己，愿往后路途，不忘初心，光芒万丈</p>
+
+        <div class="message-box" id="messageList">
+            <div class="message-card">
+                <p>愿我们在校园里积攒力量，带着热爱与勇敢，奔赴属于自己的星辰大海。不惧前路漫漫，不忘初心使命，把每一份热爱都坚持到底，在属于自己的舞台上闪闪发光。</p>
+            </div>
+            <div class="message-card">
+                <p>少年不惧岁月长，彼方尚有荣光在，珍惜校园时光，勇敢追逐梦想。把当下的每一分每一秒都过得有意义，用努力浇灌理想，用坚持成就未来，不负青春，不负自己。</p>
+            </div>
+            <div class="message-card">
+                <p>以青春为笔，以校园为卷，书写属于我们这一代人的热血与担当。怀揣赤子之心，勇担时代使命，在逐梦路上步履不停，成为有理想、有本领、有担当的新时代少年。</p>
+            </div>
+            <div class="message-card">
+                <p>愿历经千帆，归来仍是少年，在校园里积攒温暖，在成长中坚守初心，满怀希望，所向披靡，向着心中的光，一路勇往直前。</p>
+            </div>
+        </div>
+
+        <div class="message-input">
+            <textarea id="msgContent" placeholder="写下你的青春寄语..."></textarea>
+            <button class="send-btn" id="sendMsg">发送留言</button>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <div class="footer">
+        <p>青春逐梦·校园纪行 © 2026 网页设计大赛参赛作品</p>
+        <p>以梦为马 不负韶华 | 以行践志 筑梦前行</p>
+        <p style="margin-top:10px;font-size:14px;">谨以此页，致敬每一段滚烫的校园青春</p>
+    </div>
+
+    <!-- 回到顶部 -->
+    <div class="back-top">↑</div>
+
+    <script>
+        // 1. 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({behavior: 'smooth'});
+            });
+        });
+
+        // 2. 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            nav.classList.toggle('nav-scroll', window.scrollY > 50);
+        });
+
+        // 3. 移动端菜单
+        const menuBtn = document.querySelector('.menu-btn');
+        const navList = document.querySelector('.nav-list');
+        menuBtn.addEventListener('click', () => {
+            navList.classList.toggle('active');
+        });
+
+        // 4. 首屏按钮交互
+        const bannerBtn = document.querySelector('.banner-btn');
+        bannerBtn.addEventListener('click', () => {
+            document.querySelector('#campus').scrollIntoView({behavior: 'smooth'});
+            bannerBtn.textContent = '正在前往校园风光...';
+            setTimeout(() => bannerBtn.textContent = '开启校园之旅', 1500);
+        });
+
+        // 5. 随机语录
+        const quotes = [
+            "少年自有玫瑰与星光，不负韶华，不畏远方，在校园里奔赴属于自己的万丈光芒。",
+            "青春不是年华，而是心境；校园时光，是我们一生最珍贵的成长印记。",
+            "以梦为马，不负韶华，在书香四溢的校园里，遇见更好的自己。",
+            "少年的肩，既要担得起清风明月，也要扛得住风雨兼程，在校园里沉淀，在时光里蜕变。",
+            "校园的每一隅，都藏着青春的痕迹；每一次努力，都在靠近心中的远方，不负时光，无畏前行。",
+            "鲜衣怒马少年时，不负韶华行且知，校园岁月，是生命里最温柔的光。"
+        ];
+        const quoteShow = document.getElementById('quoteShow');
+        const refreshQuote = document.getElementById('refreshQuote');
+        refreshQuote.addEventListener('click', () => {
+            const random = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteShow.style.opacity = 0;
+            setTimeout(() => {
+                quoteShow.textContent = random;
+                quoteShow.style.opacity = 1;
+            }, 200);
+        });
+
+        // 6. 发布留言
+        const sendMsg = document.getElementById('sendMsg');
+        const msgContent = document.getElementById('msgContent');
+        const messageList = document.getElementById('messageList');
+        sendMsg.addEventListener('click', () => {
+            const val = msgContent.value.trim();
+            if (!val) {
+                alert('请输入你的青春寄语~');
+                return;
+            }
+            const card = document.createElement('div');
+            card.className = 'message-card';
+            card.innerHTML = `<p>${val}</p>`;
+            messageList.prepend(card);
+            msgContent.value = '';
+            alert('寄语发布成功！');
+        });
+
+        // 7. 回到顶部
+        const backTop = document.querySelector('.back-top');
+        window.addEventListener('scroll', () => {
+            backTop.classList.toggle('show', window.scrollY > 300);
+        });
+        backTop.addEventListener('click', () => {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        // 8. 滚动显示模块动画
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('show');
+            });
+        }, {threshold: 0.1});
+        sections.forEach(section => observer.observe(section));
+    </script>
+</body>
+</html>
